@@ -2,6 +2,8 @@
 
 Based on The Cherno OpenGL series on youtube: https://thecherno.com/opengl
 
+**Note:** Build on x86
+
 Project dependencies (included):
 - GLFW https://www.glfw.org/
 - GLEW http://glew.sourceforge.net/

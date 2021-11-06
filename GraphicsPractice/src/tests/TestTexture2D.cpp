@@ -9,7 +9,7 @@ namespace test {
 	TestTexture2D::TestTexture2D()
 		: m_Proj(glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f)), 
 		m_View(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0))), 
-		m_translationA(200, 200, 0), m_translationB(400, 200, 0)
+		m_translation(200, 200, 0)
 	{
 		float positions[] = {
 			-50.0f, -50.0f, 0.0f, 0.0f,
@@ -26,7 +26,7 @@ namespace test {
 		GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 		
 		m_VertexArray = std::make_unique<VertexArray>();		
-		m_VertexBuffer = std::make_unique< VertexBuffer>(positions, 4 * 4 * sizeof(float));
+		m_VertexBuffer = std::make_unique<VertexBuffer>(positions, 4 * 4 * sizeof(float));
 		VertexBufferLayout layout;
 		layout.Push<float>(2);
 		layout.Push<float>(2);
@@ -55,14 +55,7 @@ namespace test {
 		m_Texture->Bind();
 
 		{
-			glm::mat4 model = glm::translate(glm::mat4(1.0f), m_translationA);
-			glm::mat4 mvp = m_Proj * m_View * model;
-			m_Shader->Bind();
-			m_Shader->SetUniformMat4f("u_MVP", mvp);
-			renderer.Draw(*m_VertexArray, *m_IndexBuffer, *m_Shader);
-		}
-		{
-			glm::mat4 model = glm::translate(glm::mat4(1.0f), m_translationB);
+			glm::mat4 model = glm::translate(glm::mat4(1.0f), m_translation);
 			glm::mat4 mvp = m_Proj * m_View * model;
 			m_Shader->Bind();
 			m_Shader->SetUniformMat4f("u_MVP", mvp);
@@ -71,8 +64,9 @@ namespace test {
 	}
 	void TestTexture2D::OnImguiRender()
 	{
-		ImGui::SliderFloat3("Translation A", &m_translationA.x, 0.0f, 960.f);
-		ImGui::SliderFloat3("Translation B", &m_translationB.x, 0.0f, 960.f);
+		ImGui::Text("Drawing texture over a square drawn using model view and projection\nTranslation is used as last model column.");
+		ImGui::SliderFloat("X", &m_translation.x, 0.0f, 960.f);
+		ImGui::SliderFloat("Y", &m_translation.y, 0.0f, 540.0f);	
 		ImGui::Text("Application average %.3f ms/frame (%.1 FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	}
 }
